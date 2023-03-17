@@ -3,6 +3,7 @@ import { WorkflowInstance, WorkflowStatus, ExecutionPointer, EventSubscription, 
 import { WorkflowBase, IPersistenceProvider, IWorkflowHost, IQueueProvider, IDistributedLockProvider, IWorkflowExecutor, ILogger, TYPES, QueueType, IBackgroundWorker } from "../abstractions";
 import { WorkflowRegistry } from "./workflow-registry";
 import { WorkflowExecutor } from "./workflow-executor";
+import { queueEmitter } from "./event-emitter"
 
 @injectable()
 export class WorkflowQueueWorker implements IBackgroundWorker {
@@ -24,8 +25,10 @@ export class WorkflowQueueWorker implements IBackgroundWorker {
 
     private processTimer: any;
 
-    public start() {        
-        this.processTimer = setInterval(this.processQueue, 100, this);
+    public start() {
+        queueEmitter.on("queue", () => {
+            this.processQueue(this)
+        })
     }
 
     public stop() {

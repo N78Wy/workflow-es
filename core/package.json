@@ -30,6 +30,7 @@
     "typescript": "^2.2.1"
   },
   "dependencies": {
+    "events-await": "^0.2.0",
     "inversify": "^4.1.0",
     "reflect-metadata": "^0.1.10"
   }

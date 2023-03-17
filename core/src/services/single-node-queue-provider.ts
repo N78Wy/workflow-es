@@ -1,5 +1,6 @@
 import { injectable, inject } from "inversify";
 import { IQueueProvider, QueueType } from "../abstractions";
+import { queueEmitter } from "./event-emitter"
 
 var processQueue: Array<string> = [];
 var publishQueue: Array<string> = [];
@@ -15,7 +16,8 @@ export class SingleNodeQueueProvider implements IQueueProvider {
             case QueueType.Event:
                 publishQueue.push(id);
                 break;
-        }        
+        }
+        queueEmitter.emit("queue")
     }
 
     public async dequeueForProcessing(queue: any): Promise<string> {
@@ -25,5 +27,6 @@ export class SingleNodeQueueProvider implements IQueueProvider {
             case QueueType.Event:
                 return publishQueue.shift();
         }
+        queueEmitter.emit("dequeue")
     }
 }
